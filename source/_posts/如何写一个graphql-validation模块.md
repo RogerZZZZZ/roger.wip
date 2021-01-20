@@ -146,7 +146,7 @@ categories:
 
 上面只是举了一些内省系统中几个简单的应用, 那么说到这里, 聪明的小伙伴就会发现这样的系统能给我们带来什么了, 对了, 那就是大家最讨厌的`文档`.
 
-schema的编写本质就能生成一份完善的文档, 这里介绍一个现成的工具可以使用, [graohql-doc](https://github.com/mhallin/graphql-docs)
+schema的编写本质就能生成一份完善的文档, 这里介绍一个现成的工具可以使用, [graphql-doc](https://github.com/mhallin/graphql-docs)
 
 我们知道文档都是对内的, 如果将所有文档暴露在外势必会引起安全问题, 所以我们在生产环境中需要关闭内省系统
 
@@ -214,7 +214,7 @@ query getBlogDDos {
 }
 ```
 
-通过深度对`graphql`的query进行安全检查有明显的优势, 但是也有更加明显的缺点, 如果在根节点进行大量的查询一样会造成ddos攻击, 所以我们需要引入另外的方法来对`query`进行校验.
+通过深度对`graphql`的query进行安全检查虽然简单, 但是也有更加明显的缺点, 如果在根节点进行大量的查询一样会造成ddos攻击, 所以我们需要引入另外的方法来对`query`进行校验.
 
 ## 防御加固
 
@@ -286,7 +286,7 @@ function createComplexityLimitRule(
     return {
       Document: {
         enter(node) {
-          // 此处的vistor为我们自定的遍历逻辑, 接下来会细讲
+          // 此处的visitor为我们自定的遍历逻辑, 接下来会细讲
           visit(node, visitWithTypeInfo(typeInfo, visitor));
         },
         leave(node) {
@@ -330,7 +330,7 @@ leaveField() {
 }
 ```
 
-这里还有两个函数比较重要, 一个是`getFieldCostFactor`, 这个函数的作用是当遇到嵌套结构, 例如自定义数据结构或者列表时候, 增大复杂度系数. 另一个为`getFieldCost`, 这个是计算改`node`的实际cost, 并累加到总复杂度中.
+这里还有两个函数比较重要, 一个是`getFieldCostFactor`, 这个函数的作用是当遇到嵌套结构, 例如自定义数据结构或者列表时候, 增大基础的复杂度系数. 另一个为`getFieldCost`, 这个是计算该`node`的实际cost, 并累加到总复杂度中.
 
 ```js
 // 可以通过传入配置的方式, 改变不同node的复杂度, 定制自己的复杂度计算规则
@@ -342,7 +342,7 @@ const options = {
 }
 ```
 
-但是目前这样只能仅限于全局设置, 而不能对一个`query`进行自定义的复杂度计算, 并且对于不同field的开销肯定不同的, 于是我们可以通过拓展`extensions`的方式, 改变单一`field`或者`list`的复杂度. 例如:
+但是目前这样只能仅限于全局设置, 而不能对单个`query`进行自定义的复杂度计算, 并且对于不同field的开销肯定不同的, 于是我们可以通过拓展`extensions`的方式, 改变单一`field`或者`list`的复杂度. 例如:
 
 ```graphql
 directive @cost(value: Int) on FIELD_DEFINITION
@@ -358,6 +358,7 @@ type CustomCostItem {
 
 ```js
 getFieldCost() {
+  // 当enter/leave一个node时, context会发生改变
   const fieldDef = this.context.getFieldDef();
   if (fieldDef.extensions && fieldDef.extensions.getCost) {
     return fieldDef.extensions.getCost();
