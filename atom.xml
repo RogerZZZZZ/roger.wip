@@ -6,7 +6,7 @@
   <link href="http://rogerwip.tech/atom.xml" rel="self"/>
   
   <link href="http://rogerwip.tech/"/>
-  <updated>2021-01-20T01:49:18.431Z</updated>
+  <updated>2021-05-10T16:17:55.554Z</updated>
   <id>http://rogerwip.tech/</id>
   
   <author>
@@ -15,6 +15,28 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>&lt;&lt;代码整洁之道&gt;&gt; 读书笔记</title>
+    <link href="http://rogerwip.tech/2021/05/10/%3CClean%20Code%3E%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"/>
+    <id>http://rogerwip.tech/2021/05/10/%3CClean%20Code%3E%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/</id>
+    <published>2021-05-10T15:55:10.000Z</published>
+    <updated>2021-05-10T16:17:55.554Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>这本书断断续续终于最后还是读完了, 很多都是老生常谈的东西, 但其中不乏也有一些有意思值得记忆的点</p><p>这里就记录一下</p><a id="more"></a><h2 id="重构Args-第14章"><a href="#重构Args-第14章" class="headerlink" title="重构Args, 第14章"></a>重构Args, 第14章</h2><p>其中印象比较深刻的有:</p><ol><li><code>Exception类</code>的封装和使用</li><li><code>HashMap&lt;Character, ArgumentMarshaller&gt;</code>的实现和使用, 对ArgumentMarshaller有不同的实现, 比如<code>IntegerMarshaller</code>, <code>BooleanMarshaller</code>等, 然后不同的marshaller实现不同的get, set方法</li></ol><h2 id="第17章-味道与启发"><a href="#第17章-味道与启发" class="headerlink" title="第17章, 味道与启发"></a>第17章, 味道与启发</h2><p>大部分内容都在<code>重构-改善既有代码的设计</code>这书中有提及. 但有几个点值得在这里记录一下.</p><ol><li>选择算子参数</li></ol><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">calculateWeeklyPay</span><span class="params">(<span class="keyword">boolean</span> overtime)</span> </span>&#123;&#125;</span><br></pre></td></tr></table></figure><p>调用的时候就会出现<code>calculateWeeklyPay(true)</code>, 导致阅读者非常的诧异. 这样的情况应当把函数功能进行拆分, 拆分为类似<code>straightPay</code>以及<code>overTimePay</code>两个函数</p><ol start="2"><li>掩蔽时序耦合</li></ol><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">dive</span><span class="params">(String reason)</span> </span>&#123;</span><br><span class="line">  saturateGradient();</span><br><span class="line">  reticulateSplines();</span><br><span class="line">  diveForMoog(reason);</span><br><span class="line">  <span class="comment">// 编绳 -&gt; 织网 -&gt; 捕鱼 存在顺序关系, 但是对于阅读者来说失去了时序信息, 会导致潜在bug</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 更好的写法</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">dive</span><span class="params">(String reason)</span> </span>&#123;</span><br><span class="line">  Gradient gradient = saturateGradient();</span><br><span class="line">  List&lt;Spline&gt; splines = reticulateSplines(gradient);</span><br><span class="line">  diveForMoog(splines, reason);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 强制了调用顺序</span></span><br></pre></td></tr></table></figure><ol start="3"><li>不要继承常量</li></ol><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HourlyEmployee</span> <span class="keyword">extends</span> <span class="title">Employee</span> </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Employee</span> <span class="keyword">implements</span> <span class="title">PayrollConstants</span> </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">PayrollConstants</span> </span>&#123;</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> TENTHS_PRE_WEEK = <span class="number">400</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>应该改为静态导入</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="keyword">static</span> PayrollConstants.*</span><br></pre></td></tr></table></figure>]]></content>
+    
+    
+    <summary type="html">&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;这本书断断续续终于最后还是读完了, 很多都是老生常谈的东西, 但其中不乏也有一些有意思值得记忆的点&lt;/p&gt;
+&lt;p&gt;这里就记录一下&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="读书笔记" scheme="http://rogerwip.tech/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"/>
+    
+    
+    <category term="读书笔记" scheme="http://rogerwip.tech/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"/>
+    
+  </entry>
   
   <entry>
     <title>如何写一个graphql validation模块</title>
