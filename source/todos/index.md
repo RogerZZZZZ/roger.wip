@@ -30,7 +30,7 @@ date: 2021-01-08 16:20:27
 - [x] [<<如何写一个graphql validation模块>>](https://rogerwip.tech/2021/01/18/%E5%A6%82%E4%BD%95%E5%86%99%E4%B8%80%E4%B8%AAgraphql-validation%E6%A8%A1%E5%9D%97/)
 
 
-leetcode进度 **11**/**150**
+leetcode进度 **30**/**150**
 
 ## Outro
 
