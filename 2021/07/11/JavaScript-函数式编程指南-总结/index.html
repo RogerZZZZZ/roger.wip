@@ -20,15 +20,15 @@
     var CONFIG = {"hostname":"rogerwip.tech","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","width":300,"display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="函数式的意义整本书阅读下来, 我认为有三点吧:  纯函数的意义, 固定输入 &#x3D;&gt; 固定输出, 对于单元测试, 自动化测试友好. 复杂任务的分解, 相比于命令式来说, 代码意图更加明显, 增加可维护性. 有助于代码功能的拆分以及功能的模块化, 代码的逻辑可以用类似搭积木的方式完成.  但是, 函数式优雅的同时, 性能并不优雅.  过度使用柯里化, 会导致函数执行栈过深 每一次map, fi">
+  <meta name="description" content="函数式的意义整本书阅读下来, 我认为有三点吧:  纯函数的意义, 固定输入 &#x3D;&gt; 固定输出, 对于单元测试, 自动化测试友好. 复杂任务的分解, 相比于命令式来说, 代码意图更加明显, 增加可维护性. 有助于代码功能的拆分以及功能的模块化, 代码的逻辑可以用类似搭积木的方式完成.  但是, 函数式优雅的同时, 性能并不优雅.  过度使用柯里化, 会导致函数执行栈过深 每一次map, filt">
 <meta property="og:type" content="article">
 <meta property="og:title" content="JavaScript 函数式编程指南 总结">
 <meta property="og:url" content="http://rogerwip.tech/2021/07/11/JavaScript-%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B%E6%8C%87%E5%8D%97-%E6%80%BB%E7%BB%93/index.html">
 <meta property="og:site_name" content="Work In Progress">
-<meta property="og:description" content="函数式的意义整本书阅读下来, 我认为有三点吧:  纯函数的意义, 固定输入 &#x3D;&gt; 固定输出, 对于单元测试, 自动化测试友好. 复杂任务的分解, 相比于命令式来说, 代码意图更加明显, 增加可维护性. 有助于代码功能的拆分以及功能的模块化, 代码的逻辑可以用类似搭积木的方式完成.  但是, 函数式优雅的同时, 性能并不优雅.  过度使用柯里化, 会导致函数执行栈过深 每一次map, fi">
+<meta property="og:description" content="函数式的意义整本书阅读下来, 我认为有三点吧:  纯函数的意义, 固定输入 &#x3D;&gt; 固定输出, 对于单元测试, 自动化测试友好. 复杂任务的分解, 相比于命令式来说, 代码意图更加明显, 增加可维护性. 有助于代码功能的拆分以及功能的模块化, 代码的逻辑可以用类似搭积木的方式完成.  但是, 函数式优雅的同时, 性能并不优雅.  过度使用柯里化, 会导致函数执行栈过深 每一次map, filt">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2021-07-11T13:35:34.000Z">
-<meta property="article:modified_time" content="2021-07-11T15:02:03.388Z">
+<meta property="article:modified_time" content="2021-07-11T15:03:45.219Z">
 <meta property="article:author" content="RogerZZZZ">
 <meta property="article:tag" content="读书笔记">
 <meta property="article:tag" content="javascript">
@@ -134,7 +134,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">7</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">8</span></a>
 
   </li>
         <li class="menu-item menu-item-todos">
@@ -194,7 +194,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2021-07-11 21:35:34 / Modified: 23:02:03" itemprop="dateCreated datePublished" datetime="2021-07-11T21:35:34+08:00">2021-07-11</time>
+              <time title="Created: 2021-07-11 21:35:34 / Modified: 23:03:45" itemprop="dateCreated datePublished" datetime="2021-07-11T21:35:34+08:00">2021-07-11</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -250,9 +250,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <a id="more"></a>
-
-<h2 id="函数式的意义"><a href="#函数式的意义" class="headerlink" title="函数式的意义"></a>函数式的意义</h2><p>整本书阅读下来, 我认为有三点吧:</p>
+        <h2 id="函数式的意义"><a href="#函数式的意义" class="headerlink" title="函数式的意义"></a>函数式的意义</h2><p>整本书阅读下来, 我认为有三点吧:</p>
 <ul>
 <li>纯函数的意义, 固定输入 =&gt; 固定输出, 对于单元测试, 自动化测试友好.</li>
 <li>复杂任务的分解, 相比于命令式来说, 代码意图更加明显, 增加可维护性.</li>
@@ -263,6 +261,8 @@
 <li>过度使用柯里化, 会导致函数执行栈过深</li>
 <li>每一次map, filter, reduce其实都遍历了一遍数组, 所有类似lodash这样的库才会对这样的链式调用或者是compose组合式调用进行优化, 合并连接在一起的map, filter函数</li>
 </ul>
+<a id="more"></a>
+
 <h2 id="一些有意思的概念"><a href="#一些有意思的概念" class="headerlink" title="一些有意思的概念"></a>一些有意思的概念</h2><h3 id="高阶函数"><a href="#高阶函数" class="headerlink" title="高阶函数"></a>高阶函数</h3><p>可以接收其他函数作为参数的js函数, 均属于一种函数类型, 高阶函数</p>
 <blockquote>
 <p>可以联想到React中的HOC</p>
@@ -378,7 +378,10 @@
     <a href="/2021/07/07/%3C%E5%AF%8C%E7%88%B8%E7%88%B8%E7%A9%B7%E7%88%B8%E7%88%B8%3E%E8%AF%BB%E5%90%8E%E6%84%9F/" rel="prev" title="<<富爸爸穷爸爸>>读后感">
       <i class="fa fa-chevron-left"></i> <<富爸爸穷爸爸>>读后感
     </a></div>
-      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2021/07/11/Rust-%E5%BC%80%E5%8F%91%E4%B8%80%E4%B8%AA%E7%AE%80%E6%98%93%E7%9A%84web%E6%9C%8D%E5%8A%A1%E5%99%A8-%E4%B8%8A/" rel="next" title="Rust 开发一个简易的web服务器 上">
+      Rust 开发一个简易的web服务器 上 <i class="fa fa-chevron-right"></i>
+    </a></div>
     </div>
       </footer>
     
@@ -454,7 +457,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">7</span>
+          <span class="site-state-item-count">8</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
