@@ -20,20 +20,21 @@
     var CONFIG = {"hostname":"rogerwip.tech","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","width":300,"display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="前言这本书断断续续终于最后还是读完了, 很多都是老生常谈的东西, 但其中不乏也有一些有意思值得记忆的点 这里就记录一下">
+  <meta name="description" content="函数式的意义整本书阅读下来, 我认为有三点吧:  纯函数的意义, 固定输入 &#x3D;&gt; 固定输出, 对于单元测试, 自动化测试友好. 复杂任务的分解, 相比于命令式来说, 代码意图更加明显, 增加可维护性. 有助于代码功能的拆分以及功能的模块化, 代码的逻辑可以用类似搭积木的方式完成.  但是, 函数式优雅的同时, 性能并不优雅.  过度使用柯里化, 会导致函数执行栈过深 每一次map, filt">
 <meta property="og:type" content="article">
-<meta property="og:title" content="&lt;&lt;代码整洁之道&gt;&gt; 读书笔记">
-<meta property="og:url" content="http://rogerwip.tech/2021/05/10/%3CClean%20Code%3E%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/index.html">
+<meta property="og:title" content="&lt;&lt;JavaScript 函数式编程指南&gt;&gt; 总结">
+<meta property="og:url" content="http://rogerwip.tech/2021/07/11/JavaScript-%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B%E6%8C%87%E5%8D%97-%E6%80%BB%E7%BB%93/index.html">
 <meta property="og:site_name" content="Work In Progress">
-<meta property="og:description" content="前言这本书断断续续终于最后还是读完了, 很多都是老生常谈的东西, 但其中不乏也有一些有意思值得记忆的点 这里就记录一下">
+<meta property="og:description" content="函数式的意义整本书阅读下来, 我认为有三点吧:  纯函数的意义, 固定输入 &#x3D;&gt; 固定输出, 对于单元测试, 自动化测试友好. 复杂任务的分解, 相比于命令式来说, 代码意图更加明显, 增加可维护性. 有助于代码功能的拆分以及功能的模块化, 代码的逻辑可以用类似搭积木的方式完成.  但是, 函数式优雅的同时, 性能并不优雅.  过度使用柯里化, 会导致函数执行栈过深 每一次map, filt">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2021-05-10T15:55:10.000Z">
-<meta property="article:modified_time" content="2021-07-06T06:20:41.345Z">
+<meta property="article:published_time" content="2021-07-11T13:35:34.000Z">
+<meta property="article:modified_time" content="2021-07-11T14:57:49.227Z">
 <meta property="article:author" content="RogerZZZZ">
 <meta property="article:tag" content="读书笔记">
+<meta property="article:tag" content="javascript">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://rogerwip.tech/2021/05/10/%3CClean%20Code%3E%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/">
+<link rel="canonical" href="http://rogerwip.tech/2021/07/11/JavaScript-%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B%E6%8C%87%E5%8D%97-%E6%80%BB%E7%BB%93/">
 
 
 <script id="page-configurations">
@@ -46,7 +47,7 @@
   };
 </script>
 
-  <title><<代码整洁之道>> 读书笔记 | Work In Progress</title>
+  <title><<JavaScript 函数式编程指南>> 总结 | Work In Progress</title>
   
 
 
@@ -169,7 +170,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://rogerwip.tech/2021/05/10/%3CClean%20Code%3E%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/">
+    <link itemprop="mainEntityOfPage" href="http://rogerwip.tech/2021/07/11/JavaScript-%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B%E6%8C%87%E5%8D%97-%E6%80%BB%E7%BB%93/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="https://avatars1.githubusercontent.com/u/11383095?s=460&u=5327864a46eef4b9ae90c572f3f884813a9a60dc&v=4">
@@ -182,7 +183,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          <<代码整洁之道>> 读书笔记
+          <<JavaScript 函数式编程指南>> 总结
         </h1>
 
         <div class="post-meta">
@@ -191,16 +192,10 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
+              
 
-              <time title="Created: 2021-05-10 23:55:10" itemprop="dateCreated datePublished" datetime="2021-05-10T23:55:10+08:00">2021-05-10</time>
+              <time title="Created: 2021-07-11 21:35:34 / Modified: 22:57:49" itemprop="dateCreated datePublished" datetime="2021-07-11T21:35:34+08:00">2021-07-11</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-07-06 14:20:41" itemprop="dateModified" datetime="2021-07-06T14:20:41+08:00">2021-07-06</time>
-              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -225,8 +220,8 @@
       </span>
       <span class="post-meta-item-text">Valine: </span>
     
-    <a title="valine" href="/2021/05/10/%3CClean%20Code%3E%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2021/05/10/%3CClean%20Code%3E%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" itemprop="commentCount"></span>
+    <a title="valine" href="/2021/07/11/JavaScript-%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B%E6%8C%87%E5%8D%97-%E6%80%BB%E7%BB%93/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/07/11/JavaScript-%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B%E6%8C%87%E5%8D%97-%E6%80%BB%E7%BB%93/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -236,14 +231,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>1k</span>
+              <span>2.1k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>1 mins.</span>
+              <span>2 mins.</span>
             </span>
 
         </div>
@@ -255,32 +250,75 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>这本书断断续续终于最后还是读完了, 很多都是老生常谈的东西, 但其中不乏也有一些有意思值得记忆的点</p>
-<p>这里就记录一下</p>
-<a id="more"></a>
-
-<h2 id="重构Args-第14章"><a href="#重构Args-第14章" class="headerlink" title="重构Args, 第14章"></a>重构Args, 第14章</h2><p>其中印象比较深刻的有:</p>
+        <h2 id="函数式的意义"><a href="#函数式的意义" class="headerlink" title="函数式的意义"></a>函数式的意义</h2><p>整本书阅读下来, 我认为有三点吧:</p>
+<ul>
+<li>纯函数的意义, 固定输入 =&gt; 固定输出, 对于单元测试, 自动化测试友好.</li>
+<li>复杂任务的分解, 相比于命令式来说, 代码意图更加明显, 增加可维护性.</li>
+<li>有助于代码功能的拆分以及功能的模块化, 代码的逻辑可以用类似搭积木的方式完成.</li>
+</ul>
+<p>但是, 函数式优雅的同时, 性能并不优雅.</p>
+<ul>
+<li>过度使用柯里化, 会导致函数执行栈过深</li>
+<li>每一次map, filter, reduce其实都遍历了一遍数组, 所有类似lodash这样的库才会对这样的链式调用或者是compose组合式调用进行优化, 合并连接在一起的map, filter函数</li>
+</ul>
+<h2 id="一些有意思的概念"><a href="#一些有意思的概念" class="headerlink" title="一些有意思的概念"></a>一些有意思的概念</h2><h3 id="高阶函数"><a href="#高阶函数" class="headerlink" title="高阶函数"></a>高阶函数</h3><p>可以接收其他函数作为参数的js函数, 均属于一种函数类型, 高阶函数</p>
+<blockquote>
+<p>可以联想到React中的HOC</p>
+</blockquote>
+<h3 id="函数组合子"><a href="#函数组合子" class="headerlink" title="函数组合子"></a>函数组合子</h3><blockquote>
+<p>组合子是一些可以组合其他函数, 并作为控制逻辑运行的高阶函数</p>
+</blockquote>
 <ol>
-<li><code>Exception类</code>的封装和使用</li>
-<li><code>HashMap&lt;Character, ArgumentMarshaller&gt;</code>的实现和使用, 对ArgumentMarshaller有不同的实现, 比如<code>IntegerMarshaller</code>, <code>BooleanMarshaller</code>等, 然后不同的marshaller实现不同的get, set方法</li>
+<li>identity ( I-combinator )</li>
 </ol>
-<h2 id="第17章-味道与启发"><a href="#第17章-味道与启发" class="headerlink" title="第17章, 味道与启发"></a>第17章, 味道与启发</h2><p>大部分内容都在<code>重构-改善既有代码的设计</code>这书中有提及. 但有几个点值得在这里记录一下.</p>
-<ol>
-<li>选择算子参数</li>
-</ol>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">calculateWeeklyPay</span><span class="params">(<span class="keyword">boolean</span> overtime)</span> </span>&#123;&#125;</span><br></pre></td></tr></table></figure>
-<p>调用的时候就会出现<code>calculateWeeklyPay(true)</code>, 导致阅读者非常的诧异. 这样的情况应当把函数功能进行拆分, 拆分为类似<code>straightPay</code>以及<code>overTimePay</code>两个函数</p>
+<p>identity组合子是返回与参数同值的函数</p>
+<figure class="highlight moonscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">identity :: <span class="function"><span class="params">(a)</span> -&gt;</span> a</span><br></pre></td></tr></table></figure>
 <ol start="2">
-<li>掩蔽时序耦合</li>
+<li>tap ( K-组合子 )</li>
 </ol>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">dive</span><span class="params">(String reason)</span> </span>&#123;</span><br><span class="line">  saturateGradient();</span><br><span class="line">  reticulateSplines();</span><br><span class="line">  diveForMoog(reason);</span><br><span class="line">  <span class="comment">// 编绳 -&gt; 织网 -&gt; 捕鱼 存在顺序关系, 但是对于阅读者来说失去了时序信息, 会导致潜在bug</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 更好的写法</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">dive</span><span class="params">(String reason)</span> </span>&#123;</span><br><span class="line">  Gradient gradient = saturateGradient();</span><br><span class="line">  List&lt;Spline&gt; splines = reticulateSplines(gradient);</span><br><span class="line">  diveForMoog(splines, reason);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 强制了调用顺序</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>将无返回值的函数嵌入函数组合中, 它会将所属对象传入函数参数并返回该对象</p>
+</blockquote>
+<figure class="highlight xl"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">tap</span> :: (a -&gt;</span> *) -&gt; <span class="function"><span class="title">a</span> -&gt;</span> a</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> debug = R.tap(debugLog)</span><br><span class="line"><span class="keyword">const</span> isValidSsn = R.compose(debug, checkLengthSsn, debug, cleanInput);</span><br></pre></td></tr></table></figure>
 <ol start="3">
-<li>不要继承常量</li>
+<li>alt ( OR-组合子 )</li>
 </ol>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HourlyEmployee</span> <span class="keyword">extends</span> <span class="title">Employee</span> </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Employee</span> <span class="keyword">implements</span> <span class="title">PayrollConstants</span> </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">PayrollConstants</span> </span>&#123;</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> TENTHS_PRE_WEEK = <span class="number">400</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>应该改为静态导入</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="keyword">static</span> PayrollConstants.*</span><br></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> alt = R.curry(<span class="function">(<span class="params">func1, func2, val</span>) =&gt;</span> func1() || func2())</span><br></pre></td></tr></table></figure>
+<ol start="4">
+<li>fork ( join组合子 )</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> fork = <span class="function"><span class="keyword">function</span>(<span class="params">join, func1, func2</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params">val</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> join(func1(val), func2(val))</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="函数式对于执行错误的处理方式"><a href="#函数式对于执行错误的处理方式" class="headerlink" title="函数式对于执行错误的处理方式"></a>函数式对于执行错误的处理方式</h3><p>我们在实际编程的过程中, 处理错误的大多数方式为<code>try catch</code>, 而对于函数式来说, 不应该抛出异常, 理由如下</p>
+<ol>
+<li>难以与其他函数进行组合或者链接</li>
+<li>违反了引用透明性, 因为抛出异常会导致函数调用出现另外的出口, 不能确保单一的可预测的返回值</li>
+<li>违反局限性的原则, 因为用于恢复异常的代码与原始的函数调用渐行渐远, 当发生错误以后, 函数离开局部栈与环境</li>
+</ol>
+<p>接来下我们看下函数式如何处理错误, 首先给出一个概念<code>Functor</code></p>
+<h4 id="Functor"><a href="#Functor" class="headerlink" title="Functor"></a><strong>Functor</strong></h4><blockquote>
+<p>Functor只是一个可以将函数应用到它包裹的值上, 并将结果再包裹起来的数据结构</p>
+</blockquote>
+<figure class="highlight livescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">fmap :: <span class="function"><span class="params">(A -&gt; B)</span> -&gt;</span> wrap<span class="function"><span class="params">(A)</span> -&gt;</span> wrap(B)</span><br><span class="line"></span><br><span class="line">接受一个从A-&gt;B的函数, 以及一个wrap(A) Functor, 然后返回包裹着结果的新Functor wrap(B)</span><br></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> plus = R.curry(<span class="function">(<span class="params">a, b</span>) =&gt;</span> a + b);</span><br><span class="line"><span class="keyword">const</span> plus3 = plus(<span class="number">3</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> two = wrap(<span class="number">2</span>);</span><br><span class="line"><span class="keyword">const</span> five = two.fmap(plus3) <span class="comment">// wrap(5)</span></span><br><span class="line">five.map(R.indentity) <span class="comment">// -&gt; 5</span></span><br></pre></td></tr></table></figure>
+<p>但是<code>Functor</code>本身并不知道如何处理null, 当在执行过程中出现null值的时候, 依旧会报错, 此时我们引入一个更为具体化的函数式数据结构<code>Monad</code>, 旨在安全的传递错误. 此处可以联想到<code>jQuery</code></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">&#x27;#id&#x27;</span>).width().height().attribute()....</span><br><span class="line"><span class="comment">// 就算#id不存在, 也不会导致执行错误</span></span><br></pre></td></tr></table></figure>
+<h4 id="Maybe-Monad-Either-Monad"><a href="#Maybe-Monad-Either-Monad" class="headerlink" title="Maybe Monad / Either Monad"></a>Maybe Monad / Either Monad</h4><p>这两个概念类似, 我们就举一个例子就好. 此处以Maybe Monad为例.</p>
+<blockquote>
+<p>Maybe Monad侧重于整合<code>null</code>的判断逻辑, Maybe是一个包含两个具体子类型的空类型</p>
+</blockquote>
+<ul>
+<li>Just(value) - 表示值容器</li>
+<li>Nothing() - 表示要么没有值或者没有失败的附加信息, 当然, 还可以应用到Nothing上</li>
+</ul>
+<p>其实简单的做法就是在执行过程中, 如果存在null值, 就把wrap转为Nothing即可</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> safeFindObject = R.curry(<span class="function"><span class="keyword">function</span>(<span class="params">db, id</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> Maybe.fromNullable(find(db, id));</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">Maybe.prototype.fromNullable = <span class="function">(<span class="params">a</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> a !== <span class="literal">null</span> ? <span class="keyword">new</span> Just(a) : <span class="keyword">new</span> Nothing();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="递归和尾递归优化"><a href="#递归和尾递归优化" class="headerlink" title="递归和尾递归优化"></a>递归和尾递归优化</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> factorial = <span class="function">(<span class="params">n, current = <span class="number">1</span></span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (n === <span class="number">1</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> current;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> factorial(n - <span class="number">1</span>, n * current) <span class="comment">// 函数最后一条语句是下一次递归时, 性能接近for语句</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>如果函数的最后一件事情是执行一个递归函数, 那么运行时会认为不必要保持当前的栈帧, 因为所有工作已经完成了.</p>
+</blockquote>
+
     </div>
 
     
@@ -295,7 +333,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>Post link: </strong>
-    <a href="http://rogerwip.tech/2021/05/10/%3CClean%20Code%3E%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" title="&lt;&lt;代码整洁之道&gt;&gt; 读书笔记">http://rogerwip.tech/2021/05/10/<Clean Code>读书笔记/</a>
+    <a href="http://rogerwip.tech/2021/07/11/JavaScript-%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B%E6%8C%87%E5%8D%97-%E6%80%BB%E7%BB%93/" title="&lt;&lt;JavaScript 函数式编程指南&gt;&gt; 总结">http://rogerwip.tech/2021/07/11/JavaScript-函数式编程指南-总结/</a>
   </li>
   <li class="post-copyright-license">
     <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
@@ -326,6 +364,7 @@
       <footer class="post-footer">
           <div class="post-tags">
               <a href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" rel="tag"># 读书笔记</a>
+              <a href="/tags/javascript/" rel="tag"># javascript</a>
           </div>
 
         
@@ -334,13 +373,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2021/01/18/%E5%A6%82%E4%BD%95%E5%86%99%E4%B8%80%E4%B8%AAgraphql-validation%E6%A8%A1%E5%9D%97/" rel="prev" title="如何写一个graphql validation模块">
-      <i class="fa fa-chevron-left"></i> 如何写一个graphql validation模块
+    <a href="/2021/07/07/%3C%E5%AF%8C%E7%88%B8%E7%88%B8%E7%A9%B7%E7%88%B8%E7%88%B8%3E%E8%AF%BB%E5%90%8E%E6%84%9F/" rel="prev" title="<<富爸爸穷爸爸>>读后感">
+      <i class="fa fa-chevron-left"></i> <<富爸爸穷爸爸>>读后感
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2021/07/07/%3C%E5%AF%8C%E7%88%B8%E7%88%B8%E7%A9%B7%E7%88%B8%E7%88%B8%3E%E8%AF%BB%E5%90%8E%E6%84%9F/" rel="next" title="<<富爸爸穷爸爸>>读后感">
-      <<富爸爸穷爸爸>>读后感 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -400,7 +436,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%87%8D%E6%9E%84Args-%E7%AC%AC14%E7%AB%A0"><span class="nav-number">2.</span> <span class="nav-text">重构Args, 第14章</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC17%E7%AB%A0-%E5%91%B3%E9%81%93%E4%B8%8E%E5%90%AF%E5%8F%91"><span class="nav-number">3.</span> <span class="nav-text">第17章, 味道与启发</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%87%BD%E6%95%B0%E5%BC%8F%E7%9A%84%E6%84%8F%E4%B9%89"><span class="nav-number">1.</span> <span class="nav-text">函数式的意义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E4%BA%9B%E6%9C%89%E6%84%8F%E6%80%9D%E7%9A%84%E6%A6%82%E5%BF%B5"><span class="nav-number">2.</span> <span class="nav-text">一些有意思的概念</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AB%98%E9%98%B6%E5%87%BD%E6%95%B0"><span class="nav-number">2.1.</span> <span class="nav-text">高阶函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%87%BD%E6%95%B0%E7%BB%84%E5%90%88%E5%AD%90"><span class="nav-number">2.2.</span> <span class="nav-text">函数组合子</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%87%BD%E6%95%B0%E5%BC%8F%E5%AF%B9%E4%BA%8E%E6%89%A7%E8%A1%8C%E9%94%99%E8%AF%AF%E7%9A%84%E5%A4%84%E7%90%86%E6%96%B9%E5%BC%8F"><span class="nav-number">2.3.</span> <span class="nav-text">函数式对于执行错误的处理方式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Functor"><span class="nav-number">2.3.1.</span> <span class="nav-text">Functor</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Maybe-Monad-Either-Monad"><span class="nav-number">2.3.2.</span> <span class="nav-text">Maybe Monad &#x2F; Either Monad</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%80%92%E5%BD%92%E5%92%8C%E5%B0%BE%E9%80%92%E5%BD%92%E4%BC%98%E5%8C%96"><span class="nav-number">2.3.3.</span> <span class="nav-text">递归和尾递归优化</span></a></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
