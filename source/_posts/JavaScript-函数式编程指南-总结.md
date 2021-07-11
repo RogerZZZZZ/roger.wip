@@ -1,5 +1,5 @@
 ---
-title: <<JavaScript 函数式编程指南>> 总结
+title: JavaScript 函数式编程指南 总结
 date: 2021-07-11 21:35:34
 tags:
   - 读书笔记
@@ -7,6 +7,8 @@ tags:
 categories:
   - 读书笔记
 ---
+
+<!-- more -->
 
 ## 函数式的意义
 
