@@ -28,13 +28,14 @@ date: 2021-01-08 16:20:27
 - [x] << 极简逻辑学 >> **7月完成**
 - [x] << 牛虻 >> **7月完成**
 
-技术博客: **2**/**12**
+技术博客: **3**/**12**
 
 - [x] [<<用Rust写一个CLI工具>>](https://rogerwip.tech/2021/01/07/%E7%94%A8Rust%E5%86%99%E4%B8%80%E4%B8%AACLI%E5%B7%A5%E5%85%B7/)
 - [x] [<<如何写一个graphql validation模块>>](https://rogerwip.tech/2021/01/18/%E5%A6%82%E4%BD%95%E5%86%99%E4%B8%80%E4%B8%AAgraphql-validation%E6%A8%A1%E5%9D%97/)
+- [x] [<<Rust开发一个简易的web服务器>>](https://rogerwip.tech/2021/07/11/Rust-%E5%BC%80%E5%8F%91%E4%B8%80%E4%B8%AA%E7%AE%80%E6%98%93%E7%9A%84web%E6%9C%8D%E5%8A%A1%E5%99%A8/)
 
 
-leetcode进度 **30**/**150**
+leetcode进度 **40**/**150**
 
 ## Outro
 
