@@ -163,7 +163,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://rogerwip.tech/2021/07/11/Rust-%E5%BC%80%E5%8F%91%E4%B8%80%E4%B8%AA%E7%AE%80%E6%98%93%E7%9A%84web%E6%9C%8D%E5%8A%A1%E5%99%A8-%E4%B8%8A/">
+    <link itemprop="mainEntityOfPage" href="http://rogerwip.tech/2021/07/11/Rust-%E5%BC%80%E5%8F%91%E4%B8%80%E4%B8%AA%E7%AE%80%E6%98%93%E7%9A%84web%E6%9C%8D%E5%8A%A1%E5%99%A8/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="https://avatars1.githubusercontent.com/u/11383095?s=460&u=5327864a46eef4b9ae90c572f3f884813a9a60dc&v=4">
@@ -177,7 +177,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2021/07/11/Rust-%E5%BC%80%E5%8F%91%E4%B8%80%E4%B8%AA%E7%AE%80%E6%98%93%E7%9A%84web%E6%9C%8D%E5%8A%A1%E5%99%A8-%E4%B8%8A/" class="post-title-link" itemprop="url">Rust 开发一个简易的web服务器 上</a>
+            <a href="/2021/07/11/Rust-%E5%BC%80%E5%8F%91%E4%B8%80%E4%B8%AA%E7%AE%80%E6%98%93%E7%9A%84web%E6%9C%8D%E5%8A%A1%E5%99%A8/" class="post-title-link" itemprop="url">Rust 开发一个简易的web服务器</a>
         </h2>
 
         <div class="post-meta">
@@ -186,10 +186,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2021-07-11 23:04:32 / Modified: 23:05:28" itemprop="dateCreated datePublished" datetime="2021-07-11T23:04:32+08:00">2021-07-11</time>
+              <time title="Created: 2021-07-11 23:04:32" itemprop="dateCreated datePublished" datetime="2021-07-11T23:04:32+08:00">2021-07-11</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-07-17 16:41:57" itemprop="dateModified" datetime="2021-07-17T16:41:57+08:00">2021-07-17</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -207,8 +213,8 @@
       </span>
       <span class="post-meta-item-text">Valine: </span>
     
-    <a title="valine" href="/2021/07/11/Rust-%E5%BC%80%E5%8F%91%E4%B8%80%E4%B8%AA%E7%AE%80%E6%98%93%E7%9A%84web%E6%9C%8D%E5%8A%A1%E5%99%A8-%E4%B8%8A/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2021/07/11/Rust-%E5%BC%80%E5%8F%91%E4%B8%80%E4%B8%AA%E7%AE%80%E6%98%93%E7%9A%84web%E6%9C%8D%E5%8A%A1%E5%99%A8-%E4%B8%8A/" itemprop="commentCount"></span>
+    <a title="valine" href="/2021/07/11/Rust-%E5%BC%80%E5%8F%91%E4%B8%80%E4%B8%AA%E7%AE%80%E6%98%93%E7%9A%84web%E6%9C%8D%E5%8A%A1%E5%99%A8/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/07/11/Rust-%E5%BC%80%E5%8F%91%E4%B8%80%E4%B8%AA%E7%AE%80%E6%98%93%E7%9A%84web%E6%9C%8D%E5%8A%A1%E5%99%A8/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -218,14 +224,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>8</span>
+              <span>2.2k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>1 mins.</span>
+              <span>2 mins.</span>
             </span>
 
         </div>
@@ -237,10 +243,10 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h2 id="0-前言"><a href="#0-前言" class="headerlink" title="0. 前言"></a>0. 前言</h2><p>先开个头</p>
+          <h2 id="0-前言"><a href="#0-前言" class="headerlink" title="0. 前言"></a>0. 前言</h2><p>本章的目的呢是创建一个简单的web服务器, 本文的内容大部分来自于<code>&lt;&lt;Rust权威指南&gt;&gt;</code>.</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2021/07/11/Rust-%E5%BC%80%E5%8F%91%E4%B8%80%E4%B8%AA%E7%AE%80%E6%98%93%E7%9A%84web%E6%9C%8D%E5%8A%A1%E5%99%A8-%E4%B8%8A/#more" rel="contents">
+              <a class="btn" href="/2021/07/11/Rust-%E5%BC%80%E5%8F%91%E4%B8%80%E4%B8%AA%E7%AE%80%E6%98%93%E7%9A%84web%E6%9C%8D%E5%8A%A1%E5%99%A8/#more" rel="contents">
                 Read more &raquo;
               </a>
             </div>
@@ -1150,12 +1156,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="Symbols count total">23k</span>
+    <span title="Symbols count total">25k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="Reading time total">21 mins.</span>
+    <span title="Reading time total">23 mins.</span>
 </div>
   <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
   </div>
