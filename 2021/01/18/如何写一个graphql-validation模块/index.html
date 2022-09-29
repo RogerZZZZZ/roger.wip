@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"rogerwip.tech","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","width":300,"display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="前言写这篇文章的契机是因为最近项目中使用到了graphql, 为了防止接口出现安全问题, 就对graphql的validation进行了一点研究. 本文就不对graphql进行一些介绍了, 如果感兴趣的小伙伴, 可以移步到官网进行阅读链接">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何写一个graphql validation模块">
+<meta property="og:url" content="http://rogerwip.tech/2021/01/18/%E5%A6%82%E4%BD%95%E5%86%99%E4%B8%80%E4%B8%AAgraphql-validation%E6%A8%A1%E5%9D%97/index.html">
+<meta property="og:site_name" content="Work In Progress">
+<meta property="og:description" content="前言写这篇文章的契机是因为最近项目中使用到了graphql, 为了防止接口出现安全问题, 就对graphql的validation进行了一点研究. 本文就不对graphql进行一些介绍了, 如果感兴趣的小伙伴, 可以移步到官网进行阅读链接">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2021-01-18T13:40:43.000Z">
+<meta property="article:modified_time" content="2022-09-29T02:01:15.446Z">
+<meta property="article:author" content="RogerZZZZ">
+<meta property="article:tag" content="Front End">
+<meta property="article:tag" content="graphql">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://rogerwip.tech/2021/01/18/%E5%A6%82%E4%BD%95%E5%86%99%E4%B8%80%E4%B8%AAgraphql-validation%E6%A8%A1%E5%9D%97/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>如何写一个graphql validation模块 | Work In Progress</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Work In Progress" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <a target="_blank" rel="noopener" href="https://github.com/RogerZZZZZ" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Work In Progress</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">8</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">6</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">9</span></a>
+
+  </li>
+        <li class="menu-item menu-item-todos">
+
+    <a href="/todos/" rel="section"><i class="fa fa-check-circle fa-fw"></i>todos</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://rogerwip.tech/2021/01/18/%E5%A6%82%E4%BD%95%E5%86%99%E4%B8%80%E4%B8%AAgraphql-validation%E6%A8%A1%E5%9D%97/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://avatars1.githubusercontent.com/u/11383095?s=460&u=5327864a46eef4b9ae90c572f3f884813a9a60dc&v=4">
+      <meta itemprop="name" content="RogerZZZZ">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Work In Progress">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          如何写一个graphql validation模块
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-01-18 21:40:43" itemprop="dateCreated datePublished" datetime="2021-01-18T21:40:43+08:00">2021-01-18</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-09-29 10:01:15" itemprop="dateModified" datetime="2022-09-29T10:01:15+08:00">2022-09-29</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Front-End/" itemprop="url" rel="index"><span itemprop="name">Front End</span></a>
+                </span>
+            </span>
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine: </span>
+    
+    <a title="valine" href="/2021/01/18/%E5%A6%82%E4%BD%95%E5%86%99%E4%B8%80%E4%B8%AAgraphql-validation%E6%A8%A1%E5%9D%97/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/01/18/%E5%A6%82%E4%BD%95%E5%86%99%E4%B8%80%E4%B8%AAgraphql-validation%E6%A8%A1%E5%9D%97/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>6.7k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>6 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>写这篇文章的契机是因为最近项目中使用到了<code>graphql</code>, 为了防止接口出现安全问题, 就对<code>graphql</code>的<code>validation</code>进行了一点研究. 本文就不对<code>graphql</code>进行一些介绍了, 如果感兴趣的小伙伴, 可以移步到官网进行阅读<a target="_blank" rel="noopener" href="https://graphql.org/">链接</a></p>
+<a id="more"></a>
+
+<h2 id="初级的防御"><a href="#初级的防御" class="headerlink" title="初级的防御"></a>初级的防御</h2><h3 id="1-关闭内省系统"><a href="#1-关闭内省系统" class="headerlink" title="1. 关闭内省系统"></a>1. 关闭内省系统</h3><p>首先我们要知道内省是什么, 内省也可以被认为是自检系统. 通过内省我们可以简单的就获取到<code>graphql</code>支持的所有查询以及查询字段的类型, 这里举一个例子, 你可以使用<code>__schema</code>来询问<code>graphql</code>有哪些类型是可用的</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  __schema &#123;</span><br><span class="line">    types &#123;</span><br><span class="line">      name</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;data&quot;: &#123;</span><br><span class="line">    &quot;__schema&quot;: &#123;</span><br><span class="line">      &quot;types&quot;: [</span><br><span class="line">        &#123;</span><br><span class="line">          &quot;name&quot;: &quot;Query&quot;</span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">          &quot;name&quot;: &quot;Episode&quot;</span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">          &quot;name&quot;: &quot;ID&quot;</span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">          &quot;name&quot;: &quot;String&quot;</span><br><span class="line">        &#125;,</span><br><span class="line">        &#x2F;&#x2F; .....</span><br><span class="line">        &#123;</span><br><span class="line">          &quot;name&quot;: &quot;Int&quot;</span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">          &quot;name&quot;: &quot;__Type&quot;</span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">          &quot;name&quot;: &quot;__TypeKind&quot;</span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">          &quot;name&quot;: &quot;__Field&quot;</span><br><span class="line">        &#125;,</span><br><span class="line">      ]</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>类似<code>Query</code>, <code>Episode</code>这是我们再类型系统中定义的类型</li>
+<li><code>Int</code>, <code>String</code>这样是内建的标量, 由系统提供</li>
+<li><code>__Type</code>, <code>__TypeKind</code>这些则为内省系统中的一部分</li>
+</ul>
+<p>我们如何知道一个类型支持哪些字段, 而其中的字段又是什么类型呢</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  __type(name: &quot;Droid&quot;) &#123;</span><br><span class="line">    name</span><br><span class="line">    fields &#123;</span><br><span class="line">      name</span><br><span class="line">      type &#123;</span><br><span class="line">        name</span><br><span class="line">        kind</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;data&quot;: &#123;</span><br><span class="line">    &quot;__type&quot;: &#123;</span><br><span class="line">      &quot;name&quot;: &quot;Droid&quot;,</span><br><span class="line">      &quot;fields&quot;: [</span><br><span class="line">        &#123;</span><br><span class="line">          &quot;name&quot;: &quot;id&quot;,</span><br><span class="line">          &quot;type&quot;: &#123;</span><br><span class="line">            &quot;name&quot;: null,</span><br><span class="line">            &quot;kind&quot;: &quot;NON_NULL&quot;</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">          &quot;name&quot;: &quot;name&quot;,</span><br><span class="line">          &quot;type&quot;: &#123;</span><br><span class="line">            &quot;name&quot;: null,</span><br><span class="line">            &quot;kind&quot;: &quot;NON_NULL&quot;</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">          &quot;name&quot;: &quot;friends&quot;,</span><br><span class="line">          &quot;type&quot;: &#123;</span><br><span class="line">            &quot;name&quot;: null,</span><br><span class="line">            &quot;kind&quot;: &quot;LIST&quot;</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">          &quot;name&quot;: &quot;friendsConnection&quot;,</span><br><span class="line">          &quot;type&quot;: &#123;</span><br><span class="line">            &quot;name&quot;: null,</span><br><span class="line">            &quot;kind&quot;: &quot;NON_NULL&quot;</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">          &quot;name&quot;: &quot;appearsIn&quot;,</span><br><span class="line">          &quot;type&quot;: &#123;</span><br><span class="line">            &quot;name&quot;: null,</span><br><span class="line">            &quot;kind&quot;: &quot;NON_NULL&quot;</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">          &quot;name&quot;: &quot;primaryFunction&quot;,</span><br><span class="line">          &quot;type&quot;: &#123;</span><br><span class="line">            &quot;name&quot;: &quot;String&quot;,</span><br><span class="line">            &quot;kind&quot;: &quot;SCALAR&quot;</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      ]</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>其中<code>NON_NULL</code>表示是一个非空的包装, 可以通过<code>ofType</code>来获取其类型.</p>
+<p>上面只是举了一些内省系统中几个简单的应用, 那么说到这里, 聪明的小伙伴就会发现这样的系统能给我们带来什么了, 对了, 那就是大家最讨厌的<code>文档</code>.</p>
+<p>schema的编写本质就能生成一份完善的文档, 这里介绍一个现成的工具可以使用, <a target="_blank" rel="noopener" href="https://github.com/mhallin/graphql-docs">graphql-doc</a></p>
+<p>我们知道文档都是对内的, 如果将所有文档暴露在外势必会引起安全问题, 所以我们在生产环境中需要关闭内省系统</p>
+<p>这里以<code>express</code>作为例子</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> express <span class="keyword">from</span> <span class="string">&#x27;express&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> bodyParser <span class="keyword">from</span> <span class="string">&#x27;body-parser&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; graphqlExpress &#125; <span class="keyword">from</span> <span class="string">&#x27;graphql-server-express&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> NoIntrospection <span class="keyword">from</span> <span class="string">&#x27;graphql-disable-introspection&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> myGraphQLSchema = <span class="comment">// ... define or import your schema here!</span></span><br><span class="line"><span class="keyword">const</span> PORT = <span class="number">3000</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> app = express();</span><br><span class="line"></span><br><span class="line"><span class="comment">// bodyParser is needed just for POST.</span></span><br><span class="line">app.use(<span class="string">&#x27;/graphql&#x27;</span>, bodyParser.json(), graphqlExpress(&#123;</span><br><span class="line">  schema: myGraphQLSchema,</span><br><span class="line">  validationRules: [ NoIntrospection ]</span><br><span class="line">&#125;));</span><br><span class="line"></span><br><span class="line">app.listen(PORT);</span><br></pre></td></tr></table></figure>
+<h3 id="2-对Query的DDos防御"><a href="#2-对Query的DDos防御" class="headerlink" title="2. 对Query的DDos防御"></a>2. 对Query的DDos防御</h3><p><code>graphql</code>带给了前端方便的同时, 也为服务端带来了很多不确定性, 比如下面的<code>query</code>无限循环下去将会给服务器带来ddos攻击</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">query getBlogDDos &#123;</span><br><span class="line">  author(id: &quot;abc&quot;) &#123;</span><br><span class="line">    name                    # Depth: 1</span><br><span class="line">    blog &#123;                  # Depth: 2</span><br><span class="line">      author &#123;              # Depth: 3</span><br><span class="line">        name</span><br><span class="line">        blog &#123;              # Depth: 4</span><br><span class="line">          author &#123;          # Depth: 5</span><br><span class="line">            name</span><br><span class="line">            blog &#123;          # Depth: 6</span><br><span class="line">              author &#123;      # Depth: 7</span><br><span class="line">                name</span><br><span class="line">                blog &#123;      # Depth: 8</span><br><span class="line">                  # ......</span><br><span class="line">                &#125;</span><br><span class="line">              &#125;</span><br><span class="line">            &#125;</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样的场景解决方法也非常的简单, 通过<code>AST</code>分析<code>query</code>的深度并对其进行限制即可. 如果查询深度超过预设值, 则返回错误</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">&quot;errors&quot;</span>: [</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">&quot;message&quot;</span>: <span class="string">&quot;Query has depth of 8, which exceeds max depth of 5&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>通过深度对<code>graphql</code>的query进行安全检查虽然简单, 但是也有更加明显的缺点, 如果在根节点进行大量的查询一样会造成ddos攻击, 所以我们需要引入另外的方法来对<code>query</code>进行校验.</p>
+<h2 id="防御加固"><a href="#防御加固" class="headerlink" title="防御加固"></a>防御加固</h2><h3 id="1-查询的复杂度计算"><a href="#1-查询的复杂度计算" class="headerlink" title="1. 查询的复杂度计算"></a>1. 查询的复杂度计算</h3><p>查询复杂度的计算方式有很多种, 这里我们只举出一个例子, 首先我们假设查询一个基础类型字段的复杂度为<code>1</code>, 深度每<code>+1</code>(深度变化可能是列表也可能是自定义的数据结构), 就导致基础的倍数<code>*10</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">query &#123;</span><br><span class="line">  author(id: &quot;abc&quot;) &#123;</span><br><span class="line">    name                 # complexity: 1</span><br><span class="line">    id                   # complexity: 1 + 1</span><br><span class="line">    posts &#123;</span><br><span class="line">      title              # complexity: 1 + 1 + 1 * 10</span><br><span class="line">      id                 # complexity: 1 + 1 + 1 * 10 + 1 * 10</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上述<code>query</code>的复杂度为<code>22</code>, </p>
+<h3 id="2-校验工具实现"><a href="#2-校验工具实现" class="headerlink" title="2. 校验工具实现"></a>2. 校验工具实现</h3><p>现在进入本文的重点, 我们如何实现一个这样的校验工具呢, 首先看到对一个<code>query</code>的遍历, 我们能很容易的联想到深度优先算法, <code>graphql</code>官方也提供了这样的遍历函数方便开发者使用.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">visit</span>(<span class="params">root, visitor, keyMap</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// ....</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 提供了enter, leave两个函数, 当进入/离开一个node会触发</span></span><br><span class="line"><span class="keyword">const</span> editedAst = visit(ast, &#123;</span><br><span class="line">  <span class="function"><span class="title">enter</span>(<span class="params">node, key, parent, path, ancestors</span>)</span> &#123;</span><br><span class="line"></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="function"><span class="title">leave</span>(<span class="params">node, key, parent, path, ancestors</span>)</span> &#123;</span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>当然你可以指定<code>enter</code>, <code>leave</code>函数绑定的<code>node</code>类型</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">visit(ast, &#123;</span><br><span class="line">  Kind: &#123;</span><br><span class="line">    <span class="function"><span class="title">enter</span>(<span class="params">node</span>)</span> &#123;</span><br><span class="line">      <span class="comment">// enter the &quot;Kind&quot; node</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="title">leave</span>(<span class="params">node</span>)</span> &#123;</span><br><span class="line">      <span class="comment">// leave the &quot;Kind&quot; node</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>接下来是<code>visit</code>函数在<code>validation</code>中的实际使用方法</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">createComplexityLimitRule</span>(<span class="params"></span></span></span><br><span class="line"><span class="function"><span class="params">  maxCost,</span></span></span><br><span class="line"><span class="function"><span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> <span class="title">ComplexityLimit</span>(<span class="params">context</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> visitor = <span class="keyword">new</span> ComplexityVisitor(context);</span><br><span class="line">    <span class="keyword">const</span> typeInfo = context._typeInfo || <span class="keyword">new</span> TypeInfo(context.getSchema());</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">      Document: &#123;</span><br><span class="line">        <span class="function"><span class="title">enter</span>(<span class="params">node</span>)</span> &#123;</span><br><span class="line">          <span class="comment">// 此处的visitor为我们自定的遍历逻辑, 接下来会细讲</span></span><br><span class="line">          visit(node, visitWithTypeInfo(typeInfo, visitor));</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="function"><span class="title">leave</span>(<span class="params">node</span>)</span> &#123;</span><br><span class="line">          <span class="keyword">const</span> cost = visitor.getCost();</span><br><span class="line">          <span class="keyword">if</span> (cost &gt; maxCost) &#123;</span><br><span class="line">            context.reportError(</span><br><span class="line">              createError</span><br><span class="line">                ? createError(cost, node)</span><br><span class="line">                : <span class="keyword">new</span> GraphQLError(formatErrorMessage(cost), [ node ])</span><br><span class="line">            );</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;,</span><br><span class="line">      &#125;,</span><br><span class="line">    &#125;;</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>这里也贴上<a target="_blank" rel="noopener" href="https://npmdoc.github.io/node-npmdoc-graphql/build..beta..travis-ci.org/apidoc.html#apidoc.element.graphql.visitWithTypeInfo"><code>visitWithTypeInfo</code></a>的实现</p>
+</blockquote>
+<p><code>ComplexityVisitor</code>的实现核心为在构造函数中申明需要遍历的<code>Node Type</code></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">this</span>.Field = &#123;</span><br><span class="line">  enter: <span class="built_in">this</span>.enterField,</span><br><span class="line">  leave: <span class="built_in">this</span>.leaveField,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>接下来的逻辑就非常简单了, 只需要在<code>enterField</code>和<code>leaveFiled</code>中补充相应的逻辑就好了</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">enterField</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">  <span class="built_in">this</span>.costFactor *= <span class="built_in">this</span>.getFieldCostFactor();</span><br><span class="line"></span><br><span class="line">  <span class="built_in">this</span>.cost += <span class="built_in">this</span>.costFactor * <span class="built_in">this</span>.getFieldCost();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="title">leaveField</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">  <span class="built_in">this</span>.costFactor /= <span class="built_in">this</span>.getFieldCostFactor();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里还有两个函数比较重要, 一个是<code>getFieldCostFactor</code>, 这个函数的作用是当遇到嵌套结构, 例如自定义数据结构或者列表时候, 增大基础的复杂度系数. 另一个为<code>getFieldCost</code>, 这个是计算该<code>node</code>的实际cost, 并累加到总复杂度中.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 可以通过传入配置的方式, 改变不同node的复杂度, 定制自己的复杂度计算规则</span></span><br><span class="line"><span class="keyword">const</span> options = &#123;</span><br><span class="line">  scalarCost = <span class="number">1</span>,</span><br><span class="line">  objectCost = <span class="number">0</span>,</span><br><span class="line">  listFactor = <span class="number">10</span>,</span><br><span class="line">  ...injectOptions</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>但是目前这样只能仅限于全局设置, 而不能对单个<code>query</code>进行自定义的复杂度计算, 并且对于不同field的开销肯定不同的, 于是我们可以通过拓展<code>extensions</code>的方式, 改变单一<code>field</code>或者<code>list</code>的复杂度. 例如:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">directive @cost(value: Int) on FIELD_DEFINITION</span><br><span class="line">directive @costFactor(value: Int) on FIELD_DEFINITION</span><br><span class="line"></span><br><span class="line">type CustomCostItem &#123;</span><br><span class="line">  expensiveField: ExpensiveItem @cost(value: 50)</span><br><span class="line">  expensiveList: [MyItem] @costFactor(value: 100)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>对应的我们需要更改<code>getFieldCostFactor</code>以及<code>getFieldCost</code>函数的实现, 此处以<code>getFieldCost</code>为例</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">getFieldCost</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">  <span class="comment">// 当enter/leave一个node时, context会发生改变</span></span><br><span class="line">  <span class="keyword">const</span> fieldDef = <span class="built_in">this</span>.context.getFieldDef();</span><br><span class="line">  <span class="keyword">if</span> (fieldDef.extensions &amp;&amp; fieldDef.extensions.getCost) &#123;</span><br><span class="line">    <span class="keyword">return</span> fieldDef.extensions.getCost();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">this</span>.getTypeCost(<span class="built_in">this</span>.context.getType());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>最后我们只需要提供出<code>getCost</code>方法将累加的复杂度结果透出. 在外层的<code>Document.leave</code>处对复杂度总和进行判断, 如果超过之前设置的阈值, 则抛出一个异常即可.</p>
+<p>到这里我们就简单的实现了一个<code>graphql</code>的校验插件, 当然在文章前半部分提到的<code>深度判断</code>也可以用类似的方法快速实现</p>
+<h2 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h2><p>上面所说的查询复杂度计算也存在问题, 我们很难完美的实现对一个query复杂度的判断</p>
+<p>所以这里我们还能通过<code>节流</code>的方式限制服务器处理单一<code>query</code>的次数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">query &#123;</span><br><span class="line">  author(id: &quot;abc&quot;) &#123;</span><br><span class="line">    name</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>假设执行上面查询的时间为100ms, 我们可以设置服务器处理这个查询的<code>最大服务器时间</code>为600ms, 每隔1s能够增加100ms的<code>服务器时间</code>, 如果服务器的<code>服务器时间</code>不够执行上面的查询, 则拒绝服务. 但是问题是我们需要对上面的查询时间有一个预估, 但这有可能是不准确. </p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>Post author:  </strong>RogerZZZZ
+  </li>
+  <li class="post-copyright-link">
+    <strong>Post link: </strong>
+    <a href="http://rogerwip.tech/2021/01/18/%E5%A6%82%E4%BD%95%E5%86%99%E4%B8%80%E4%B8%AAgraphql-validation%E6%A8%A1%E5%9D%97/" title="如何写一个graphql validation模块">http://rogerwip.tech/2021/01/18/如何写一个graphql-validation模块/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+        
+
+  <div class="followme">
+    <p>Welcome to my other publishing channels</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Front-End/" rel="tag"># Front End</a>
+              <a href="/tags/graphql/" rel="tag"># graphql</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/01/17/%E9%87%8D%E6%9E%84-%E6%94%B9%E5%96%84%E6%97%A2%E6%9C%89%E4%BB%A3%E7%A0%81%E7%9A%84%E8%AE%BE%E8%AE%A1-%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" rel="prev" title="<<重构 改善既有代码的设计>>读书笔记">
+      <i class="fa fa-chevron-left"></i> <<重构 改善既有代码的设计>>读书笔记
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/05/10/%3CClean%20Code%3E%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" rel="next" title="<<代码整洁之道>> 读书笔记">
+      <<代码整洁之道>> 读书笔记 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9D%E7%BA%A7%E7%9A%84%E9%98%B2%E5%BE%A1"><span class="nav-number">2.</span> <span class="nav-text">初级的防御</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%85%B3%E9%97%AD%E5%86%85%E7%9C%81%E7%B3%BB%E7%BB%9F"><span class="nav-number">2.1.</span> <span class="nav-text">1. 关闭内省系统</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E5%AF%B9Query%E7%9A%84DDos%E9%98%B2%E5%BE%A1"><span class="nav-number">2.2.</span> <span class="nav-text">2. 对Query的DDos防御</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%98%B2%E5%BE%A1%E5%8A%A0%E5%9B%BA"><span class="nav-number">3.</span> <span class="nav-text">防御加固</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E6%9F%A5%E8%AF%A2%E7%9A%84%E5%A4%8D%E6%9D%82%E5%BA%A6%E8%AE%A1%E7%AE%97"><span class="nav-number">3.1.</span> <span class="nav-text">1. 查询的复杂度计算</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E6%A0%A1%E9%AA%8C%E5%B7%A5%E5%85%B7%E5%AE%9E%E7%8E%B0"><span class="nav-number">3.2.</span> <span class="nav-text">2. 校验工具实现</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A1%A5%E5%85%85"><span class="nav-number">4.</span> <span class="nav-text">补充</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="RogerZZZZ"
+      src="https://avatars1.githubusercontent.com/u/11383095?s=460&u=5327864a46eef4b9ae90c572f3f884813a9a60dc&v=4">
+  <p class="site-author-name" itemprop="name">RogerZZZZ</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">9</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/RogerZZZZZ" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;RogerZZZZZ" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/rogerjluo5@gmail.com" title="E-Mail → rogerjluo5@gmail.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/people/rogerzzzz" title="知乎 → https:&#x2F;&#x2F;www.zhihu.com&#x2F;people&#x2F;rogerzzzz" rel="noopener" target="_blank"><i class="fa fa-globe fa-fw"></i>知乎</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">RogerZZZZ</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="Symbols count total">26k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">24 mins.</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  <!-- custom analytics part create by xiamo -->
+<script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+<script>AV.initialize("frRQsFLpMOaPu4hJn7gTVFoh-gzGzoHsz", "DC9Y2XYUFE34PtPwGcKwo2TJ");</script>
+<script>
+function showTime(Counter) {
+	var query = new AV.Query(Counter);
+	$(".leancloud_visitors").each(function() {
+		var url = $(this).attr("id").trim();
+		query.equalTo("url", url);
+		query.find({
+			success: function(results) {
+				if (results.length == 0) {
+					var content = $(document.getElementById(url)).text() + ': 0';
+					$(document.getElementById(url)).text(content);
+					return;
+				}
+				for (var i = 0; i < results.length; i++) {
+					var object = results[i];
+					var content = $(document.getElementById(url)).text() + ': ' + object.get('time');
+					$(document.getElementById(url)).text(content);
+				}
+			},
+			error: function(object, error) {
+				console.log("Error: " + error.code + " " + error.message);
+			}
+		});
+	});
+}
+function addCount(Counter) {
+	var Counter = AV.Object.extend("Counter");
+	url = $(".leancloud_visitors").attr('id').trim();
+	title = $(".leancloud_visitors").attr('data-flag-title').trim();
+	var query = new AV.Query(Counter);
+	query.equalTo("url", url);
+	query.find({
+		success: function(results) {
+			if (results.length > 0) {
+				var counter = results[0];
+				counter.fetchWhenSave(true);
+				counter.increment("time");
+				counter.save(null, {
+					success: function(counter) {
+						var content = $(document.getElementById(url)).text() + ': ' + counter.get('time');
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(counter, error) {
+						console.log('Failed to save Visitor num, with error message: ' + error.message);
+					}
+				});
+			} else {
+				var newcounter = new Counter();
+				newcounter.set("title", title);
+				newcounter.set("url", url);
+				newcounter.set("time", 1);
+				newcounter.save(null, {
+					success: function(newcounter) {
+					    console.log("newcounter.get('time')="+newcounter.get('time'));
+						var content = $(document.getElementById(url)).text() + ': ' + newcounter.get('time');
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(newcounter, error) {
+						console.log('Failed to create');
+					}
+				});
+			}
+		},
+		error: function(error) {
+			console.log('Error:' + error.code + " " + error.message);
+		}
+	});
+}
+(function() {
+	var Counter = AV.Object.extend("Counter");
+	if ($('.leancloud_visitors').length >= 0) {
+		addCount(Counter);
+	} else if ($('.post-title-link').length > 1) {
+		showTime(Counter);
+	}
+})();
+</script>
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'frRQsFLpMOaPu4hJn7gTVFoh-gzGzoHsz',
+      appKey     : 'DC9Y2XYUFE34PtPwGcKwo2TJ',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>
