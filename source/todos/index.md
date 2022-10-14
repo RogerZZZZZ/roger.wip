@@ -29,7 +29,7 @@ date: 2021-01-08 16:20:27
 
 技术博客: **1**/**6**
 
-- [x] << git merge vs git rebase >>(https://rogerwip.tech/2021/01/08/git%20merge%20vs%20git%20rebase/)
+- [x] [<< git merge vs git rebase >>](https://rogerwip.tech/2021/01/08/git%20merge%20vs%20git%20rebase/)
 - [ ] << Webpack原理以及插件编写 >>
 - [ ] << Ruby on Rail入门实战 >>
 
